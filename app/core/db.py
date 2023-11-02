@@ -1,6 +1,7 @@
 from functools import lru_cache
 
-from pymongo import MongoClient, database
+from pymongo import database
+from motor.motor_asyncio import AsyncIOMotorClient
 
 
 class MongoDB:
@@ -9,7 +10,7 @@ class MongoDB:
         self.db_name = db_name
 
     def get_db_client(self) -> database.Database:
-        mongo_client = MongoClient(self.uri)
+        mongo_client = AsyncIOMotorClient(self.uri)
         return mongo_client[self.db_name]
 
 

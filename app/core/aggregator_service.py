@@ -1,16 +1,17 @@
 import datetime
+from collections.abc import Coroutine
 
 from app.core import mappings, utils
 from app.core.repositories import SampleCollectionRepository
 from app.schemas import GroupType
 
 
-def aggregate(
+async def aggregate(
     dt_from: datetime.datetime,
     dt_upto: datetime.datetime,
     group_type: GroupType,
     sample_collection_repository: SampleCollectionRepository,
-) -> dict[str, list]:
+) -> Coroutine[None, None, dict[str, list]]:
     """
     Salary aggregator.
     :param dt_from: start aggregation datetime
@@ -43,6 +44,6 @@ def aggregate(
         {"$addFields": {"label": {"$dateFromString": {"dateString": "$_id"}}}},
     ]
     results = sample_collection_repository.aggregate(pipeline)
-    output = utils.prepare_result(results, dt_from, dt_upto, group_type)
+    output = await utils.prepare_result(results, dt_from, dt_upto, group_type)
 
     return output

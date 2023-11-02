@@ -1,5 +1,6 @@
 import datetime
 from pathlib import Path
+from asyncio import new_event_loop, set_event_loop
 
 import pytest
 from dotenv import dotenv_values
@@ -8,6 +9,21 @@ from app.core.aggregator_service import aggregate
 from app.core.db import get_db
 from app.core.repositories import SampleCollectionRepository
 from app.schemas import GroupType
+
+
+pytestmark = pytest.mark.asyncio
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    """
+    Creates event loop for tests.
+    """
+    loop = new_event_loop()
+    set_event_loop(loop)
+
+    yield loop
+    loop.close()
 
 
 @pytest.fixture(scope="session")
@@ -227,9 +243,9 @@ def get_mongo_client():
         ],
     ],
 )
-def test_aggregator_service(get_mongo_client, dt_from, dt_upto, group_type, exp):
+async def test_aggregator_service(get_mongo_client, dt_from, dt_upto, group_type, exp):
     sample_collection_repository = SampleCollectionRepository(
         get_mongo_client["sample_collection"]
     )
-    rec = aggregate(dt_from, dt_upto, group_type, sample_collection_repository)
+    rec = await aggregate(dt_from, dt_upto, group_type, sample_collection_repository)
     assert rec == exp

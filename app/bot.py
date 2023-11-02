@@ -39,7 +39,10 @@ async def rlt_handler(message: types.Message) -> None:
     try:
         req_raw = json.loads(message.text)
         req = Request.model_validate(req_raw)
-        resp = json.dumps(service.aggregate(req.dt_from, req.dt_upto, req.group_type.value, sample_collection_repository))
+        aggregation_result = await service.aggregate(
+            req.dt_from, req.dt_upto, req.group_type.value, sample_collection_repository
+        )
+        resp = json.dumps(aggregation_result)
     except json.decoder.JSONDecodeError as e:
         logging.log(level=logging.getLevelName("INFO"), msg=f"JSONDecodeError. {e}")
     except ValidationError as e:

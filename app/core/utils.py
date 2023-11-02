@@ -1,20 +1,20 @@
 import datetime
-import typing as tp
+from collections.abc import Coroutine, AsyncIterable
 
 from app.core import mappings
 from app.schemas import GroupType
 
 
-def prepare_result(
-    results: tp.Iterable,
+async def prepare_result(
+    results: AsyncIterable,
     dt_from: datetime.datetime,
     dt_upto: datetime.datetime,
     group_type: GroupType,
-) -> dict[str, list]:
+) -> Coroutine[None, None, dict[str, list]]:
     """
     Prepare result from mongo answer.
     :param results: mongo answer
-    :type results: CommandCursor[Mapping[str, Any] | Any]
+    :type results: AsyncIterable
     :type dt_from: datetime.datetime
     :param dt_upto: end aggregation datetime
     :type dt_upto: datetime.datetime
@@ -22,7 +22,7 @@ def prepare_result(
     :type group_type: GroupType
 
     :return: prepared result
-    :rtype: dict[str, list]
+    :rtype: Coroutine[None, None, dict[str, list]]
     """
     output = {"dataset": [], "labels": []}
     time_pattern = mappings.group_type__pattern[group_type]
@@ -31,7 +31,7 @@ def prepare_result(
 
     cur_dt = dt_from
     delta = mappings.group_type__delta[group_type]
-    for d in results:
+    async for d in results:
         next_val = d["totalValue"]
         next_dt = d["label"]
         while next_dt != cur_dt:
