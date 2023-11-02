@@ -1,8 +1,7 @@
 import datetime
 
-from pymongo.collection import Collection
-
 from app.core import mappings, utils
+from app.core.repositories import SampleCollectionRepository
 from app.schemas import GroupType
 
 
@@ -10,7 +9,7 @@ def aggregate(
     dt_from: datetime.datetime,
     dt_upto: datetime.datetime,
     group_type: GroupType,
-    collection: Collection,
+    sample_collection_repository: SampleCollectionRepository,
 ) -> dict[str, list]:
     """
     Salary aggregator.
@@ -20,8 +19,8 @@ def aggregate(
     :type dt_upto: datetime.datetime
     :param group_type: aggregation type
     :type group_type: GroupType
-    :param collection: MongoDB Collection
-    :type collection: pymongo.collection.Collection
+    :param sample_collection_repository: Sample Collection Repository
+    :type sample_collection_repository: SampleCollectionRepository
 
 
     :rtype: dict
@@ -43,7 +42,7 @@ def aggregate(
         {"$sort": {"_id": 1}},
         {"$addFields": {"label": {"$dateFromString": {"dateString": "$_id"}}}},
     ]
-    results = collection.aggregate(pipeline)
+    results = sample_collection_repository.aggregate(pipeline)
     output = utils.prepare_result(results, dt_from, dt_upto, group_type)
 
     return output
