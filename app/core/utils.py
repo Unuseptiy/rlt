@@ -1,5 +1,5 @@
 import datetime
-from collections.abc import Coroutine, AsyncIterable
+from collections.abc import AsyncIterable, Coroutine
 
 from app.core import mappings
 from app.schemas import GroupType

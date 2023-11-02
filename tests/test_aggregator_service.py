@@ -1,6 +1,6 @@
 import datetime
-from pathlib import Path
 from asyncio import new_event_loop, set_event_loop
+from pathlib import Path
 
 import pytest
 from dotenv import dotenv_values
@@ -9,7 +9,6 @@ from app.core.aggregator_service import aggregate
 from app.core.db import get_db
 from app.core.repositories import SampleCollectionRepository
 from app.schemas import GroupType
-
 
 pytestmark = pytest.mark.asyncio
 

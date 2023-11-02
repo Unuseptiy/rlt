@@ -1,12 +1,11 @@
 import asyncio
-import sys
 import logging
-from dotenv import dotenv_values
+import sys
 
-from aiogram.enums import ParseMode
 from aiogram import Bot
-
+from aiogram.enums import ParseMode
 from bot import dp
+from dotenv import dotenv_values
 
 
 async def main() -> None:

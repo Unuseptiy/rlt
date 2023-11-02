@@ -1,7 +1,7 @@
 from functools import lru_cache
 
-from pymongo import database
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import database
 
 
 class MongoDB:
